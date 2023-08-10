@@ -1,0 +1,19 @@
+{
+  "Modes": {
+    "Config": {
+      "Errors": true,
+      "Workers": true,
+      "VccUses": 1,
+      "WorkerThreads": 0,
+      "PromoType": "https://promos.discord.gg/"
+    },
+    "Net": {
+      "Server": [ "discord.com", "443"],
+      "JA3": "",
+      "Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9006 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36",
+      "Proxy": "",
+      "Redirect": false,
+      "TimeOut": 30
+    }
+  }
+}
