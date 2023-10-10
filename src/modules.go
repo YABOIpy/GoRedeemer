@@ -65,45 +65,42 @@ func ok(code int) bool {
 	return false
 }
 
-var (
-	buildNumber = make(map[string]string)
-)
+func BuildInfo() string {
+	var buildnum map[string]string
+	
+	reg := regexp.MustCompilePOSIX(`Build Number: "\)\.concat\("([0-9]{4,8})"`)
+	Client := &fhttp.Client{}
 
-func (in *Instance) BuildInfo() string {
+	req, err := fhttp.NewRequest("GET", ""+
+		"https://discord.com/assets/cec3c372f71b56bc3d44.js",
+		nil,
+	)
 
-	js := regexp.MustCompile(`([a-zA-z0-9]+)\.js`)
-	buildInfo := regexp.MustCompile(`Build Number: "\)\.concat\("([0-9]{4,8})"`)
+	Hd.Header(req, map[string]string{
+		"accept-encoding": "identify",
+	})
+	resp, err := Client.Do(req)
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
+	defer resp.Body.Close()
 
-	client := &shttp.Client{Timeout: 10 * time.Second}
-
-	res, err := client.Get("https://discord.com/app")
-	in.Err(err)
-
-	defer res.Body.Close()
-	body, err := io.ReadAll(res.Body)
-	in.Err(err)
-
-	rs := js.FindAllString(string(body), -1)
-	asset := rs[len(rs)-1]
-	if strings.Contains(asset, "invisible") {
-		asset = rs[len(rs)-2]
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+		return ""
 	}
 
-	resp, err := client.Get("https://discord.com/assets/" + asset)
-	in.Err(err)
+	buildInfos := strings.Split(
+		strings.ReplaceAll(reg.FindAllString(string(b), -1)[0], " ", ""),
+		",",
+	)
 
-	defer resp.Body.Close()
-	b, err := io.ReadAll(resp.Body)
-	in.Err(err)
+	bn := strings.Split(buildInfos[0], `("`)
+	buildnum["stable"] = strings.ReplaceAll(bn[len(bn)-1], `"`, ``)
 
-	z := buildInfo.FindAllString(string(b), -1)
-	e := strings.ReplaceAll(z[0], " ", "")
-	buildInfos := strings.Split(e, ",")
-
-	buildNum := strings.Split(buildInfos[0], `("`)
-	buildNumber["stable"] = strings.ReplaceAll(buildNum[len(buildNum)-1], `"`, ``)
-
-	return buildNumber["stable"]
+	return buildnum["stable"]
 }
 
 func (in *Instance) Xprop() string {
