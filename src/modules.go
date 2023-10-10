@@ -66,7 +66,7 @@ func ok(code int) bool {
 }
 
 func BuildInfo() string {
-	var buildnum map[string]string
+	buildnum := make(map[string]string)
 	
 	reg := regexp.MustCompilePOSIX(`Build Number: "\)\.concat\("([0-9]{4,8})"`)
 	Client := &fhttp.Client{}
