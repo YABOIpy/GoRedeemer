@@ -65,7 +65,7 @@ func ok(code int) bool {
 	return false
 }
 
-func BuildInfo() string {
+func (in *Instance) BuildInfo() string {
 	buildnum := make(map[string]string)
 	
 	reg := regexp.MustCompilePOSIX(`Build Number: "\)\.concat\("([0-9]{4,8})"`)
