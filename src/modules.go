@@ -75,10 +75,8 @@ func BuildInfo() string {
 		"https://discord.com/assets/cec3c372f71b56bc3d44.js",
 		nil,
 	)
-
-	Hd.Header(req, map[string]string{
-		"accept-encoding": "identify",
-	})
+	req.Header.Set("accept-encoding", "identify")
+	
 	resp, err := Client.Do(req)
 	if err != nil {
 		log.Println(err)
