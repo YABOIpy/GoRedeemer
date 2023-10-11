@@ -69,9 +69,9 @@ func BuildInfo() string {
 	buildnum := make(map[string]string)
 	
 	reg := regexp.MustCompilePOSIX(`Build Number: "\)\.concat\("([0-9]{4,8})"`)
-	Client := &fhttp.Client{}
+	Client := &shttp.Client{}
 
-	req, err := fhttp.NewRequest("GET", ""+
+	req, err := shttp.NewRequest("GET", ""+
 		"https://discord.com/assets/cec3c372f71b56bc3d44.js",
 		nil,
 	)
